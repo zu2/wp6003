@@ -1,5 +1,5 @@
 Read air condition from wp6003 via BLE.
 
-FakeWP6003.ino	A program that pretends to be WP6003 for M5 Stick C.
-wp6003.py	Access wp6003 data from python on MacOS X.
+- FakeWP6003.ino	A program that pretends to be WP6003 for M5 Stick C.
+- wp6003.py	Access wp6003 data from python on MacOS X.
 
