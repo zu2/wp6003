@@ -1,0 +1,89 @@
+It's just memo.
+
+Write command to CUSTOM SERVICE (UUID:0000FFF1-0000-1000-8000-00805F9B34FB) -> CUSTOM CHARACTERISTIC (UUID:0000FFF1-0000-1000-8000-00805F9B34FB).
+
+Answer returns via notify event from CHARACTERISTIC (UUID: 0000FFF4-0000-1000-8000-00805F9B34FB)
+
+1. aa
+
+set sensor's clock and answer.
+
+-> Value: aa15011e0c3629
+<- Value: aa15011e0c3629
+
+  aa: command
+  15: year-2000 (0x15 -> 21)
+  01: month (01-0c)
+  1e: mday
+  0c: hour
+  36: min
+  29: sec
+
+2. ae 
+
+set/get notify interval time.
+
+  ae 01 xx : set notify every xx min.
+
+-> Value: ae02
+<- Value: ae0305
+
+  ae 02 : read notify ivterval from sensor.
+  ae 03 xx : answer notify interval time (response to ae02).
+
+3. ab
+
+request notify immediately.
+
+-> Value: ab
+<- Value: 0a15020e091e00d408000007000001000230
+
+  0a : response header?
+  15020e 091e: year,month,day and hour,minute. see 'aa' command.
+  00d4: temperature*10 (d4 -> 21.2 degree Celsius)
+  0800: ??
+  0007: TVOC*1000 (0007 -> 0.007mg/㎥)
+  0000: HCHO*1000 (0000 -> 0.000mg/㎥)
+  0100: ??
+  0230: CO2 (230 -> 560ppm)
+
+-> Value: ab 
+<- Value: 0a15020e091a00d408003fff3fff010001c2
+
+sometime, sensor returns bad data (3fff3fff). I don't know the reason.
+
+
+4. ad
+
+request calibration.
+
+-> Value: ad
+<- Value: ad01
+
+
+5. ac
+
+I don't know. check sensor??
+
+-> Value: ac
+<- Value: ac01000000
+
+-> Value: ac
+<- Value: ac09000000
+
+-> Value: ac
+<- Value: ac00000000
+
+5. ee
+
+reset??
+
+6. 0b
+
+I don't know...
+
+-> Value: 0b15011e0c3200d7314d02760063000002b9
+-> Value: ac00000000
+
+thanks to saso5.
+see. https://github.com/zu2/wp6003/issues/1#issuecomment-778885274
