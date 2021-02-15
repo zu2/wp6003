@@ -38,7 +38,7 @@ static void notifyCallback(
   Serial.print(length);
   Serial.print(", ");
   for (auto i = 0; i < length; i++) {
-    Serial.print(pData[i], HEX);Serial.print(" ");
+    Serial.print(pData[ZZZZi], HEX);Serial.print(" ");
   }
   Serial.println("");
   // need calibration?
@@ -62,6 +62,12 @@ static void notifyCallback(
   notify_time = time(NULL);
 }
 
+void sendCalibration() {
+  Serial.println("send calibration command 'ad'");
+  byte command_ad[] = { 0xad };
+  pRemoteCommand->writeValue(command_ad, sizeof(command_ad));
+  delay(500);
+} 
 
 bool connectToServer(BLEAddress pAddress) {
   Serial.print("Forming a connection to ");
@@ -105,11 +111,6 @@ bool connectToServer(BLEAddress pAddress) {
   byte command_aa[] = { 0xaa, (byte)(tm->tm_year%100), (byte)(tm->tm_mon+1), (byte)(tm->tm_mday),
                               (byte)(tm->tm_hour), (byte)(tm->tm_min), (byte)(tm->tm_sec) };
   pRemoteCommand->writeValue(command_aa, sizeof(command_aa));
-  delay(500);
-    
-  Serial.println("send calibration command 'ad'");
-  byte command_ad[] = { 0xad };
-  pRemoteCommand->writeValue(command_ad, sizeof(command_ad));
   delay(500);
    
   Serial.println("send notify interval 'ae'");
