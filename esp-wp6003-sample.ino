@@ -38,14 +38,11 @@ static void notifyCallback(
   Serial.print(length);
   Serial.print(", ");
   for (auto i = 0; i < length; i++) {
-    Serial.print(pData[ZZZZi], HEX);Serial.print(" ");
+    Serial.print(pData[i], HEX);Serial.print(" ");
   }
   Serial.println("");
-  // need calibration?
-  if((pData[10]==0x27) && (pData[11]==0x0f)
-  && (pData[12]==0x07) && (pData[13]==0xCF)
-  && (pData[16]==0x07) && (pData[17]==0xD0)){
-    ESP.restart(); // restart
+  if(pData[0]!=0x0a) {
+    return;
   }
   double temp  = (pData[6] * 256 + pData[7]) / 10.0;
   double tvoc  = (pData[10] * 256 + pData[11])/1000.0;
@@ -100,11 +97,22 @@ bool connectToServer(BLEAddress pAddress) {
     return false;
   }
   Serial.println(" - Found our Sensor");
+
+#if 0
   delay(1000);
   Serial.println("send initialize command 'ee'");
   byte command_ee[] = { 0xee };
   pRemoteCommand->writeValue(command_ee, sizeof(command_ee));
   delay(2000);
+#endif
+
+  notified = false;
+  notify_time = time(NULL);
+  Serial.println("send register notify");
+  pRemoteSensor->registerForNotify(notifyCallback);
+  M5.dis.drawpix(0, 0x0000f0); // blue
+  delay(500);
+
   time_t t = time(NULL);
   struct tm *tm;
   tm = localtime(&t);
@@ -118,13 +126,6 @@ bool connectToServer(BLEAddress pAddress) {
   pRemoteCommand->writeValue(command_ae, sizeof(command_ae));
   delay(500);
   
-  notified = false;
-  notify_time = time(NULL);
-  Serial.println("send register notify");
-  pRemoteSensor->registerForNotify(notifyCallback);
-  M5.dis.drawpix(0, 0x0000f0); // blue
-  delay(500);
-
   Serial.println("send notify request");
   static byte command_ab[] = { 0xab };
   pRemoteCommand->writeValue(command_ab, sizeof(command_ab));
