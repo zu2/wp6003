@@ -162,7 +162,7 @@ void setup() {
   Serial.println("getScan");
   pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
   Serial.println("setAdvertisedDeviceCallbacks");
-  Serial.print("connetc to "); Serial.println(DEVICE_NAME);
+  Serial.print("connect to "); Serial.println(DEVICE_NAME);
   pBLEScan->setActiveScan(true);
   pBLEScan->start(10);
   Serial.println("");
